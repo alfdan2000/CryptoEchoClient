@@ -26,8 +26,7 @@ public class CryptoEchoClient {
             BufferedReader in
                     = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             System.out.println(in.readLine());
-            PrintWriter out
-                    = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
             // We could use Base64 encoding and communicate with strings using in and out
             // However, we show here how to send and receive serializable java objects
             ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
@@ -53,9 +52,9 @@ public class CryptoEchoClient {
             byte[] iv = cipher.getIV();
 
             objectOutput.writeObject(iv);
-            System.out.println("Sent IV");
+
             byte[] newIV = (byte[]) objectInput.readObject();
-            System.out.println("recieved newIV");
+
             Cipher newCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeySpec newSecretKey = new SecretKeySpec(randomBytes, "AES");
             newCipher.init(Cipher.DECRYPT_MODE, newSecretKey, new IvParameterSpec(newIV));
@@ -77,13 +76,9 @@ public class CryptoEchoClient {
                 } else {
                     // Receive the reply from the server and print it
                     // You need to modify this to handle encrypted reply
-
-                    //SecretKeySpec newSecretKey = new SecretKeySpec(randomBytes, "AES");
-
                     byte[] newEncryptedByte = (byte[]) objectInput.readObject();
                     String str = new String(newCipher.doFinal(newEncryptedByte));
                     System.out.println(str);
-                    //System.out.println(in.readLine());
                 }
             }
         } catch (Exception e) {

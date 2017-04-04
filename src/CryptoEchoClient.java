@@ -53,8 +53,10 @@ public class CryptoEchoClient {
 
             objectOutput.writeObject(iv);
 
+            /** Retrieves vector from server*/
             byte[] newIV = (byte[]) objectInput.readObject();
 
+            /** Creates a new AES encryption using vector sent from Server*/
             Cipher newCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeySpec newSecretKey = new SecretKeySpec(randomBytes, "AES");
             newCipher.init(Cipher.DECRYPT_MODE, newSecretKey, new IvParameterSpec(newIV));
@@ -76,8 +78,11 @@ public class CryptoEchoClient {
                 } else {
                     // Receive the reply from the server and print it
                     // You need to modify this to handle encrypted reply
+                    /** Recieve the encrypted message*/
                     byte[] newEncryptedByte = (byte[]) objectInput.readObject();
+                    /** Decrypts message to a string*/
                     String str = new String(newCipher.doFinal(newEncryptedByte));
+                    /** Prints the message*/
                     System.out.println(str);
                 }
             }
